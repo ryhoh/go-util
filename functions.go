@@ -1,8 +1,21 @@
 package util
 
 import (
+	"fmt"
+
 	common "github.com/ryhoh/go-util/common"
 )
+
+// Clips value into [min, max]
+func Clip[T common.Ordered](value, min, max T) T {
+	if value < min {
+		return min
+	}
+	if value > max {
+		return max
+	}
+	return value
+}
 
 // Returns maximum element from parameters
 func Max[T common.Ordered](param ...T) T {
@@ -40,6 +53,38 @@ func Min[T common.Ordered](param ...T) T {
 	}
 }
 
+// Power for integer
+// note: throws error when overflowed
+func Pow[T1 common.Integer, T2 common.Unsigned](base T1, exponent T2) (T1, error) {
+	if exponent == 0 {
+		return 1, nil
+	}
+	if exponent == 1 {
+		return base, nil
+	}
+
+	// 2 <= exponent
+	res_A, err := Pow(base, exponent/2)
+	if err != nil { // overflowed
+		return base, err
+	}
+
+	res_B := res_A * res_A
+	if (res_B / res_A) != res_A { // overflowed
+		return base, fmt.Errorf("overflow occured")
+	}
+
+	if exponent%2 == 0 {
+		return res_B, nil
+	}
+
+	res_C := res_B * base
+	if (res_C / base) != res_B { // overflowed
+		return base, fmt.Errorf("overflow occured")
+	}
+	return res_C, nil
+}
+
 // Reverses slice (in-place)
 func Reverse[T interface{}](slice *[]T) {
 	end := len(*slice)
@@ -48,6 +93,17 @@ func Reverse[T interface{}](slice *[]T) {
 	}
 }
 
+// Returns reversed slice (returns copy and doesn't modify original)
+func Reversed[T interface{}](slice *[]T) *[]*T {
+	end := len(*slice)
+	res := make([]*T, end)
+	for i := 0; i < end; i++ {
+		res[i] = &(*slice)[end-1-i]
+	}
+	return &res
+}
+
+// Reverse string
 func ReversedString(str string) string {
 	runes := []rune(str)
 	Reverse(&runes)

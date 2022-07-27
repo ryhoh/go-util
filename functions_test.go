@@ -5,6 +5,19 @@ import (
 	"testing"
 )
 
+func TestClip(t *testing.T) {
+	/* uint8 [0, 255] clipping */
+	if actual := Clip(20, 0, 255); actual != 20 {
+		t.Errorf("expected %v but given %v", 20, actual)
+	}
+	if actual := Clip(-20, 0, 255); actual != 0 {
+		t.Errorf("expected %v but given %v", 0, actual)
+	}
+	if actual := Clip(400, 0, 255); actual != 255 {
+		t.Errorf("expected %v but given %v", 255, actual)
+	}
+}
+
 func TestMax(t *testing.T) {
 	/* Parameter changing */
 	if actual := Max(1); actual != 1 {
@@ -73,6 +86,62 @@ func TestMin(t *testing.T) {
 	Min[int]()
 }
 
+func TestPow(t *testing.T) {
+	/* Normal case */
+	actual, err := Pow(5, uint(0))
+	if err != nil {
+		t.Errorf("expected %v but given %v", nil, err)
+	}
+	if actual != 1 {
+		t.Errorf("expected %v but given %v", 1, actual)
+	}
+
+	actual, err = Pow(6, uint(1))
+	if err != nil {
+		t.Errorf("expected %v but given %v", nil, err)
+	}
+	if actual != 6 {
+		t.Errorf("expected %v but given %v", 6, actual)
+	}
+
+	actual, err = Pow(2, uint(4))
+	if err != nil {
+		t.Errorf("expected %v but given %v", nil, err)
+	}
+	if actual != 16 {
+		t.Errorf("expected %v but given %v", 16, actual)
+	}
+
+	actual, err = Pow(-3, uint(3))
+	if err != nil {
+		t.Errorf("expected %v but given %v", nil, err)
+	}
+	if actual != -27 {
+		t.Errorf("expected %v but given %v", -27, actual)
+	}
+
+	actual, err = Pow(13, uint(9))
+	if err != nil {
+		t.Errorf("expected %v but given %v", nil, err)
+	}
+	if actual != 10604499373 {
+		t.Errorf("expected %v but given %v", 10604499373, actual)
+	}
+}
+
+func TestPow_Overflow(t *testing.T) {
+	/* Overflow case */
+	_, err := Pow[int16, uint](2, 32)
+	if err == nil {
+		t.Errorf("expected error but given %v", nil)
+	}
+
+	_, err = Pow[uint8, uint](15, 3)
+	if err == nil {
+		t.Errorf("expected error but given %v", nil)
+	}
+}
+
 func TestReverse(t *testing.T) {
 	/* Length: odd or even */
 	expected := []int{5, 4, 3, 2, 1}
@@ -95,6 +164,49 @@ func TestReverse(t *testing.T) {
 	Reverse(&actual_rune)
 	if !reflect.DeepEqual(actual_rune, expected_rune) {
 		t.Errorf("expected %v but given %v", actual_rune, expected_rune)
+	}
+}
+
+func TestReversed(t *testing.T) {
+	/* Length: odd or even */
+	expected := []int{5, 4, 3, 2, 1}
+	base := []int{1, 2, 3, 4, 5}
+	base_copy := []int{1, 2, 3, 4, 5}
+	actual := *Reversed(&base)
+	if !reflect.DeepEqual(base, base_copy) {
+		t.Errorf("expected %v but given %v", base_copy, base)
+	}
+	for i := 0; i < len(actual); i++ {
+		if *actual[i] != expected[i] {
+			t.Errorf("expected %v but given %v", expected, actual)
+		}
+	}
+
+	expected = []int{9, 8, 7, 6}
+	base = []int{6, 7, 8, 9}
+	base_copy = []int{6, 7, 8, 9}
+	actual = *Reversed(&base)
+	if !reflect.DeepEqual(base, base_copy) {
+		t.Errorf("expected %v but given %v", base_copy, base)
+	}
+	for i := 0; i < len(actual); i++ {
+		if *actual[i] != expected[i] {
+			t.Errorf("expected %v but given %v", expected, actual)
+		}
+	}
+
+	/* non-ascii charactors */
+	expected_rune := []rune("参弐壱")
+	base_rune := []rune("壱弐参")
+	base_rune_copy := []rune("壱弐参")
+	actual_rune := *Reversed(&base_rune)
+	if !reflect.DeepEqual(base_rune, base_rune_copy) {
+		t.Errorf("expected %v but given %v", base_rune_copy, base_rune)
+	}
+	for i := 0; i < len(actual_rune); i++ {
+		if *actual_rune[i] != expected_rune[i] {
+			t.Errorf("expected %v but given %v", expected_rune, actual_rune)
+		}
 	}
 }
 
