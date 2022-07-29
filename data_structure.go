@@ -65,3 +65,53 @@ func (set *Set[T]) String() string {
 	res.WriteString("]")
 	return res.String()
 }
+
+func Push[T any](slice *[]T, value ...T) {
+	slice_new := append(*slice, value...)
+	*slice = slice_new
+}
+
+func Pop[T any](slice *[]T) *T {
+	if len(*slice) == 0 {
+		return nil
+	}
+
+	end_idx := len(*slice) - 1
+	retval := (*slice)[end_idx]
+	slice_new := (*slice)[:end_idx]
+	*slice = slice_new
+	return &retval
+}
+
+func Top[T any](slice *[]T) *T {
+	if len(*slice) == 0 {
+		return nil
+	}
+	end_idx := len(*slice) - 1
+	retval := (*slice)[end_idx]
+	return &retval
+}
+
+func Enqueue[T any](slice *[]T, value ...T) {
+	slice_new := append(*slice, value...)
+	*slice = slice_new
+}
+
+func Dequeue[T any](slice *[]T) *T {
+	if len(*slice) == 0 {
+		return nil
+	}
+
+	retval := (*slice)[0]
+	slice_new := (*slice)[1:]
+	*slice = slice_new
+	return &retval
+}
+
+func Front[T any](slice *[]T) *T {
+	if len(*slice) == 0 {
+		return nil
+	}
+	retval := (*slice)[0]
+	return &retval
+}

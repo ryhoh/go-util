@@ -95,7 +95,7 @@ func TestContains(t *testing.T) {
 	}
 }
 
-func TestString(t *testing.T) {
+func TestString_Set(t *testing.T) {
 	set := NewSet[int]()
 	expected := "Set[]"
 	actual := set.String()
@@ -122,5 +122,125 @@ func TestString(t *testing.T) {
 	sort.Slice(actual_list, func(a, b int) bool { return actual_list[a] < actual_list[b] })
 	if !reflect.DeepEqual(actual_list, expected_list) {
 		t.Errorf("expected %v but given %v", expected_list, actual_list)
+	}
+}
+
+func TestPush(t *testing.T) {
+	slice := []int{}
+	expected := []int{1}
+	Push(&slice, 1)
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+
+	Push(&slice, 2)
+	expected = []int{1, 2}
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+}
+
+func TestPop(t *testing.T) {
+	slice := []int{1, 2}
+	expected := []int{1}
+	popped := *Pop(&slice)
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+	if popped != 2 {
+		t.Errorf("expected %v but given %v", 2, popped)
+	}
+
+	popped = *Pop(&slice)
+	expected = []int{}
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+	if popped != 1 {
+		t.Errorf("expected %v but given %v", 2, popped)
+	}
+
+	popped_p := Pop(&slice)
+	expected = []int{}
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+	if popped_p != nil {
+		t.Errorf("expected %v but given %v", nil, popped_p)
+	}
+}
+
+func TestTop(t *testing.T) {
+	slice := []int{1, 2}
+	expected := 2
+	top := *Top(&slice)
+	if top != expected {
+		t.Errorf("expected %v but given %v", expected, top)
+	}
+
+	slice = []int{}
+	top_p := Top(&slice)
+	if top_p != nil {
+		t.Errorf("expected %v but given %v", nil, top)
+	}
+}
+
+func TestEnqueue(t *testing.T) {
+	slice := []int{}
+	expected := []int{1}
+	Enqueue(&slice, 1)
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+
+	Enqueue(&slice, 2)
+	expected = []int{1, 2}
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+}
+
+func TestDequeue(t *testing.T) {
+	slice := []int{2, 1}
+	expected := []int{1}
+	dequeued := *Dequeue(&slice)
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+	if dequeued != 2 {
+		t.Errorf("expected %v but given %v", 2, dequeued)
+	}
+
+	dequeued = *Dequeue(&slice)
+	expected = []int{}
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+	if dequeued != 1 {
+		t.Errorf("expected %v but given %v", 2, dequeued)
+	}
+
+	dequeued_p := Dequeue(&slice)
+	expected = []int{}
+	if !reflect.DeepEqual(slice, expected) {
+		t.Errorf("expected %v but given %v", expected, slice)
+	}
+	if dequeued_p != nil {
+		t.Errorf("expected %v but given %v", nil, dequeued_p)
+	}
+}
+
+func TestFront(t *testing.T) {
+	slice := []int{2, 1}
+	expected := 2
+	front := *Front(&slice)
+	if front != expected {
+		t.Errorf("expected %v but given %v", expected, front)
+	}
+
+	slice = []int{}
+	front_p := Front(&slice)
+	if front_p != nil {
+		t.Errorf("expected %v but given %v", nil, front)
 	}
 }
