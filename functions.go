@@ -53,6 +53,50 @@ func Min[T common.Ordered](param ...T) T {
 	}
 }
 
+// Returns maximum element's index from parameters
+func Argmax[T common.Ordered](param ...T) []int {
+	switch len(param) {
+	case 0:
+		panic("Argmax(param) expects one or more parameters but given nothing")
+	case 1:
+		return []int{0}
+	default:
+		biggest := param[0]
+		biggest_indices := []int{0}
+		for i, rest := range param[1:] {
+			if biggest < rest {
+				biggest = rest
+				biggest_indices = []int{i + 1}
+			} else if biggest == rest {
+				biggest_indices = append(biggest_indices, i+1)
+			}
+		}
+		return biggest_indices
+	}
+}
+
+// Returns maximum element's index from parameters
+func Argmin[T common.Ordered](param ...T) []int {
+	switch len(param) {
+	case 0:
+		panic("Argmin(param) expects one or more parameters but given nothing")
+	case 1:
+		return []int{0}
+	default:
+		smallest := param[0]
+		smallest_indices := []int{0}
+		for i, rest := range param[1:] {
+			if smallest > rest {
+				smallest = rest
+				smallest_indices = []int{i + 1}
+			} else if smallest == rest {
+				smallest_indices = append(smallest_indices, i+1)
+			}
+		}
+		return smallest_indices
+	}
+}
+
 // Power for integer
 // note: throws error when overflowed
 func Pow[T1 common.Integer, T2 common.Unsigned](base T1, exponent T2) (T1, error) {

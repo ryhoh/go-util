@@ -86,6 +86,74 @@ func TestMin(t *testing.T) {
 	Min[int]()
 }
 
+func TestArgmax(t *testing.T) {
+	/* Parameter changing */
+	if actual := Argmax(1); !reflect.DeepEqual(actual, []int{0}) {
+		t.Errorf("expected [0] but given %d", actual)
+	}
+
+	if actual := Argmax(1, 2); !reflect.DeepEqual(actual, []int{1}) {
+		t.Errorf("expected [1] but given %d", actual)
+	}
+
+	if actual := Argmax(1, 2, 3); !reflect.DeepEqual(actual, []int{2}) {
+		t.Errorf("expected [2] but given %d", actual)
+	}
+
+	if actual := Argmax(3, 2, 3); !reflect.DeepEqual(actual, []int{0, 2}) {
+		t.Errorf("expected [0, 2] but given %d", actual)
+	}
+
+	/* Slice deploying */
+	s := []int64{2, 3, 1}
+	if actual := Argmax(s...); !reflect.DeepEqual(actual, []int{1}) {
+		t.Errorf("expected [1] but given %d", actual)
+	}
+
+	/* Error case */
+	defer func() {
+		err := recover()
+		if err != "Argmax(param) expects one or more parameters but given nothing" {
+			t.Errorf("unhandled error thrown: %v", err)
+		}
+	}()
+	Argmax[int]()
+}
+
+func TestArgmin(t *testing.T) {
+	/* Parameter changing */
+	if actual := Argmin(1); !reflect.DeepEqual(actual, []int{0}) {
+		t.Errorf("expected [0] but given %d", actual)
+	}
+
+	if actual := Argmin(2, 1); !reflect.DeepEqual(actual, []int{1}) {
+		t.Errorf("expected [1] but given %d", actual)
+	}
+
+	if actual := Argmin(3, 2, 1); !reflect.DeepEqual(actual, []int{2}) {
+		t.Errorf("expected [2] but given %d", actual)
+	}
+
+	if actual := Argmin(1, 2, 1); !reflect.DeepEqual(actual, []int{0, 2}) {
+		t.Errorf("expected [0, 2] but given %d", actual)
+	}
+
+	/* Slice deploying */
+	s := []int64{2, 1, 3}
+	if actual := Argmin(s...); !reflect.DeepEqual(actual, []int{1}) {
+		t.Errorf("expected [1] but given %d", actual)
+	}
+
+	/* Error case */
+	defer func() {
+		err := recover()
+		if err != "Argmin(param) expects one or more parameters but given nothing" {
+			t.Errorf("unhandled error thrown: %v", err)
+		}
+	}()
+	Argmin[int]()
+}
+
 func TestPow(t *testing.T) {
 	/* Normal case */
 	actual, err := Pow(5, uint(0))
