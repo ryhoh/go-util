@@ -154,6 +154,76 @@ func TestArgmin(t *testing.T) {
 	Argmin[int]()
 }
 
+func TestAll(t *testing.T) {
+	/* Parameter changing */
+	expected := false
+	if actual := All(); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = true
+	if actual := All(true); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = false
+	if actual := All(false, true); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = false
+	if actual := All(false, false, false); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = false
+	if actual := All(false, false, true); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = true
+	if actual := All(true, true, true); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	/* Slice deploying */
+	s := []bool{false, false, true}
+	expected = false
+	if actual := All(s...); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+}
+
+func TestAny(t *testing.T) {
+	/* Parameter changing */
+	expected := false
+	if actual := Any(); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = true
+	if actual := Any(true); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = true
+	if actual := Any(false, true); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	expected = false
+	if actual := Any(false, false, false); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+
+	/* Slice deploying */
+	s := []bool{false, false, true}
+	expected = true
+	if actual := Any(s...); actual != expected {
+		t.Errorf("expected %v but given %v", expected, actual)
+	}
+}
+
 func TestPow(t *testing.T) {
 	/* Normal case */
 	actual, err := Pow(5, uint(0))

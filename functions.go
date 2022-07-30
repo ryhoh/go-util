@@ -97,6 +97,40 @@ func Argmin[T common.Ordered](param ...T) []int {
 	}
 }
 
+// Returns (param[0] && param[1] && ... && param[n])
+func All(param ...bool) bool {
+	switch len(param) {
+	case 0:
+		return false
+	case 1:
+		return param[0]
+	default:
+		for _, bool_val := range param {
+			if !bool_val {
+				return false
+			}
+		}
+		return true
+	}
+}
+
+// Returns (param[0] || param[1] || ... || param[n])
+func Any(param ...bool) bool {
+	switch len(param) {
+	case 0:
+		return false
+	case 1:
+		return param[0]
+	default:
+		for _, bool_val := range param {
+			if bool_val {
+				return true
+			}
+		}
+		return false
+	}
+}
+
 // Power for integer
 // note: throws error when overflowed
 func Pow[T1 common.Integer, T2 common.Unsigned](base T1, exponent T2) (T1, error) {
